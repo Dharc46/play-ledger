@@ -1,0 +1,45 @@
+/* App.css – ĐÃ ĐƯỢC FIX FULL WIDTH + ĐẸP HƠN TEMPLATE MẶC ĐỊNH */
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Bỏ hoàn toàn giới hạn 1280px, cho phép full width */
+#root {
+  width: 100%;
+  max-width: none;        /* ← Quan trọng nhất! */
+  margin: 0 auto;
+  padding: 1rem;          /* padding nhỏ cho mobile */
+  text-align: left;       /* bỏ center không cần thiết */
+}
+
+/* Responsive padding đẹp hơn */
+@media (min-width: 640px) {
+  #root {
+    padding: 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  #root {
+    padding: 2rem;
+  }
+}
+
+/* Các class cũ của template (giữ lại nếu bạn còn dùng logo spin) */
+.logo { height: 6em; padding: 1.5em; will-change: filter; transition: filter 300ms; }
+.logo:hover { filter: drop-shadow(0 0 2em #646cffaa); }
+.logo.react:hover { filter: drop-shadow(0 0 2em #61dafbaa); }
+
+@keyframes logo-spin {
+  from { transform: rotate(0deg); }
+ to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo { animation: logo-spin infinite 20s linear; }
+}
+
+.card { padding: 2em; }
+.read-the-docs { color: #888; }
