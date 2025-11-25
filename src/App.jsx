@@ -13,7 +13,7 @@ const CRITERIA = [
   {
     key: "characters",
     title: "** 2. Nhân vật",
-    hint: "Tôi có cảm thấy hứng thú về nhân vật không (ngoại hình, tính cách, diễn xuất)?",
+    hint: "Tôi có cảm thấy hứng thú về nhân vật không (tính cách, diễn xuất)?",
   },
   {
     key: "gameplay",
@@ -33,7 +33,7 @@ const CRITERIA = [
   {
     key: "monetization",
     title: "** 6. Chi phí & mô hình kinh doanh",
-    hint: "Game có đòi hỏi nạp tiền hay cày quá mức khiến tôi thấy phiền không?",
+    hint: "Game có đòi hỏi nạp tiền quá mức khiến tôi thấy phiền không?",
   },
   {
     key: "time",
@@ -43,7 +43,7 @@ const CRITERIA = [
   {
     key: "community",
     title: "** 8. Cộng đồng & môi trường",
-    hint: "Cộng đồng có quy lớn lớn, thân thiện, vui vẻ, ít toxic không?",
+    hint: "Cộng đồng có quy nhỏ hay lớn, thân thiện, vui vẻ, ít toxic không?",
   },
   {
     key: "purpose",
@@ -124,6 +124,7 @@ export default function App() {
       scoreCached: 0, // latest total out of 50
       evaluations: [], // each: {id, dateISO, scores: {key:0..5}, total}
       deadline: null, // dd/mm/yy string
+      mobileRevenue: null,
     };
     setGames((s) => [g, ...s]);
   }
@@ -189,6 +190,24 @@ export default function App() {
     setGames((s) => s.map((g) => (g.id === id ? { ...g, deadline: ddmm } : g)));
   }
 
+  function handleSetMobileRevenue(id, rawValue) {
+    setGames((s) =>
+      s.map((g) => {
+        if (g.id !== id) return g;
+        if (rawValue === "") {
+          return { ...g, mobileRevenue: null };
+        }
+        const parsed = Number(rawValue);
+        return Number.isNaN(parsed)
+          ? g
+          : {
+              ...g,
+              mobileRevenue: parsed,
+            };
+      })
+    );
+  }
+
   function sortedListView() {
     // When displaying list tab, sort by score descending
     return [...games].sort((a, b) => {
@@ -207,14 +226,27 @@ export default function App() {
   function deadlineListView() {
     // only playing games
     const playingGames = games.filter((g) => g.playing);
+    const getRevenueValue = (game) => {
+      if (typeof game?.mobileRevenue === "number") return game.mobileRevenue;
+      const numeric = Number(game?.mobileRevenue);
+      return Number.isFinite(numeric) ? numeric : 0;
+    };
     // parse date to sort ascending; invalid dates go to end
     playingGames.sort((a, b) => {
       const da = parseDateDDMMYY(a.deadline);
       const db = parseDateDDMMYY(b.deadline);
-      if (!da && !db) return b.scoreCached - a.scoreCached; // both no date -> by score desc
+      if (!da && !db) {
+        const revDiff = getRevenueValue(b) - getRevenueValue(a);
+        if (revDiff !== 0) return revDiff;
+        return b.scoreCached - a.scoreCached; // both no date -> by score desc
+      }
       if (!da) return 1;
       if (!db) return -1;
-      if (da.getTime() === db.getTime()) return b.scoreCached - a.scoreCached; // same date -> score desc
+      if (da.getTime() === db.getTime()) {
+        const revDiff = getRevenueValue(b) - getRevenueValue(a);
+        if (revDiff !== 0) return revDiff;
+        return b.scoreCached - a.scoreCached; // same date -> score desc
+      }
       return da - db; // ascending
     });
     return playingGames;
@@ -370,6 +402,7 @@ export default function App() {
                   <th style={{ width: "64px", padding: "8px" }}>Cover</th>
                   <th style={{ padding: "8px" }}>Name</th>
                   <th style={{ width: "200px", padding: "8px" }}>Deadline</th>
+                  <th style={{ width: "200px", padding: "8px" }}>Mobile revenue (million)</th>
                 </tr>
               </thead>
               <tbody>
@@ -394,15 +427,25 @@ export default function App() {
                       <div className="font-medium truncate">{g.name}</div>
                     </td>
                     <td style={{ padding: "8px", width: "200px" }}>
-                      <label className="text-xs text-gray-400 block">
-                        Deadline (dd/mm/yy)
-                      </label>
                       <input
                         value={g.deadline || ""}
                         onChange={(e) =>
                           handleSetDeadline(g.id, e.target.value)
                         }
                         placeholder="dd/mm/yy"
+                        className="w-full rounded px-2 py-1 bg-gray-900 text-gray-100 border border-gray-700"
+                      />
+                    </td>
+                    <td style={{ padding: "8px", width: "200px" }}>
+                      <input
+                        type="number"
+                        min="0"
+                        step="1"
+                        value={g.mobileRevenue ?? ""}
+                        onChange={(e) =>
+                          handleSetMobileRevenue(g.id, e.target.value)
+                        }
+                        placeholder="0"
                         className="w-full rounded px-2 py-1 bg-gray-900 text-gray-100 border border-gray-700"
                       />
                     </td>
