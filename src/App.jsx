@@ -243,9 +243,9 @@ export default function App() {
       if (!da) return 1;
       if (!db) return -1;
       if (da.getTime() === db.getTime()) {
-        const revDiff = getRevenueValue(b) - getRevenueValue(a);
-        if (revDiff !== 0) return revDiff;
-        return b.scoreCached - a.scoreCached; // same date -> score desc
+        const scoreDiff = b.scoreCached - a.scoreCached;
+        if (scoreDiff !== 0) return scoreDiff; // same date -> score desc
+        return getRevenueValue(b) - getRevenueValue(a); // same score -> revenue desc
       }
       return da - db; // ascending
     });
