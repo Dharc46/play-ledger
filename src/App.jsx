@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 // File: App.jsx
 // App name: PlayLedger
@@ -7,53 +7,53 @@ import React, { useState, useEffect } from "react";
 const CRITERIA = [
   {
     key: "story",
-    title: "** 1. Cốt truyện & thế giới",
-    hint: "Thế giới và câu chuyện có khiến tôi hứng thú, muốn tìm hiểu không?",
+    title: "1. Thế giới & Câu chuyện",
+    hint: "Có hấp dẫn, mạch lạc, khiến bạn muốn tìm hiểu và theo dõi không?",
   },
   {
     key: "characters",
-    title: "** 2. Nhân vật",
-    hint: "Tôi có cảm thấy hứng thú về nhân vật không (tính cách, diễn xuất)?",
+    title: "2. Nhân vật",
+    hint: "Thiết kế, cá tính, diễn xuất, độ cuốn hút của từng nhân vật có khiến bạn gắn bó không?",
+  },
+  {
+    key: "immersion",
+    title: "3. Hòa nhập & Nhịp độ (Immersion & Pacing)",
+    hint: "Game có khiến bạn đắm chìm, cảm thấy cuốn theo dòng chảy không? Nhịp độ có hợp với tâm trạng và gu của bạn không (không quá chậm, không quá mệt)?",
   },
   {
     key: "gameplay",
-    title: "** 3. Gameplay",
-    hint: "Lối chơi có hợp gu và mang lại cảm giác vui, “đã” hoặc thử thách tôi thích không?",
+    title: "4. Gameplay",
+    hint: "Lối chơi có hợp gu, tạo cảm giác vui, thử thách, hoặc đã tay theo kiểu bạn thích không?",
   },
   {
     key: "art",
-    title: "** 4. Đồ họa & phong cách nghệ thuật",
-    hint: "Hình ảnh, thiết kế, màu sắc có hợp gu thẩm mỹ của tôi không?",
+    title: "5. Đồ họa & Phong cách nghệ thuật",
+    hint: "Thẩm mỹ, phối màu, thiết kế, tổng thể visual có hợp gu của bạn không?",
   },
   {
     key: "sound",
-    title: "** 5. Âm thanh & lồng tiếng",
-    hint: "Âm nhạc và lồng tiếng có khiến tôi muốn đeo tai nghe để tận hưởng không?",
+    title: "6. Âm thanh & Lồng tiếng",
+    hint: "Nhạc nền, hiệu ứng, giọng lồng tiếng có khiến bạn muốn đeo tai nghe để tận hưởng không?",
   },
   {
-    key: "monetization",
-    title: "** 6. Chi phí & mô hình kinh doanh",
-    hint: "Game có đòi hỏi nạp tiền quá mức khiến tôi thấy phiền không?",
-  },
-  {
-    key: "time",
-    title: "** 7. Thời gian đầu tư",
-    hint: "Game có đòi hỏi đầu tư nhiều thời gian không?",
+    key: "resources",
+    title: "7. Tài nguyên cần đầu tư (Time & Money)",
+    hint: "Game có đòi hỏi nhiều thời gian hoặc nạp tiền nhiều hơn mức bạn thấy thoải mái không?",
   },
   {
     key: "community",
-    title: "** 8. Cộng đồng & môi trường",
-    hint: "Cộng đồng có quy nhỏ hay lớn, thân thiện, vui vẻ, ít toxic không?",
+    title: "8. Cộng đồng & Môi trường chơi",
+    hint: "Cộng đồng có vui vẻ, thân thiện, ít toxic không?",
   },
   {
     key: "purpose",
-    title: "** 9. Mục đích cá nhân",
-    hint: "Game này có đáp ứng nhu cầu hiện tại của tôi (giải trí, thư giãn, đắm chìm, thử thách…) không?",
+    title: "9. Mục đích cá nhân",
+    hint: "Game này có phù hợp với nhu cầu hiện tại của bạn (thư giãn, giải trí, đắm chìm, thử thách…) không?",
   },
   {
     key: "mood",
-    title: "** 10. Trạng thái cảm xúc hiện tại",
-    hint: "Tôi có thật sự muốn trải nghiệm một game như vậy ngay lúc này không?",
+    title: "10. Trạng thái cảm xúc hiện tại",
+    hint: "Ngay lúc này, bạn có thực sự muốn chơi loại game này không?",
   },
 ];
 
@@ -77,15 +77,6 @@ function parseDateDDMMYY(str) {
   return isNaN(date.getTime()) ? null : date;
 }
 
-function formatDateDDMMYY(date) {
-  if (!date) return "";
-  const d = String(date.getDate()).padStart(2, "0");
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const y = String(date.getFullYear()).slice(-2);
-  return `${d}/${m}/${y}`;
-}
-
-// Đặt ở đầu file App.jsx, trước App()
 function getVerdict(total) {
   if (total <= 25) return "Có lẽ không nên chơi.";
   if (total <= 35) return "Có thể thử.";
@@ -127,12 +118,6 @@ export default function App() {
       mobileRevenue: null,
     };
     setGames((s) => [g, ...s]);
-  }
-
-  function updateGame(updated) {
-    setGames((s) =>
-      s.map((g) => (g.id === updated.id ? { ...g, ...updated } : g))
-    );
   }
 
   function deleteGame(id) {
@@ -613,9 +598,7 @@ function RatingModal({ game, onClose, onSave }) {
         <div className="flex items-start justify-between">
           <div>
             <h2 className="text-xl font-bold">Đánh giá: {game.name}</h2>
-            <div className="text-gray-400 text-sm">
-              Lần đánh giá trước: {game.evaluations?.length || 0}
-            </div>
+
           </div>
           <div className="flex gap-2">
             <button onClick={onClose} className="px-2 py-1 bg-gray-700 rounded">
@@ -662,29 +645,6 @@ function RatingModal({ game, onClose, onSave }) {
                   {((total / 50) * 10).toFixed(1)}/10
                 </div>
               </div>
-            </div>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-medium">Lịch sử đánh giá</h3>
-            <div className="mt-2 space-y-2 max-h-40 overflow-auto">
-              {game.evaluations?.length ? (
-                game.evaluations.map((ev) => (
-                  <div key={ev.id} className="bg-gray-800 p-2 rounded text-sm">
-                    <div className="flex justify-between">
-                      <div>{new Date(ev.dateISO).toLocaleString()}</div>
-                      <div>{ev.total}/50</div>
-                    </div>
-                    <div className="text-gray-400 text-xs mt-1">
-                      {CRITERIA.map(
-                        (c) => `${c.title}: ${ev.scores[c.key] ?? 0}`
-                      ).join(" • ")}
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-gray-400">Chưa có đánh giá trước.</div>
-              )}
             </div>
           </div>
 
