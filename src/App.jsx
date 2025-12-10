@@ -460,7 +460,7 @@ export default function App() {
                   <th style={{ width: "64px", padding: "8px" }}>Cover</th>
                   <th style={{ padding: "8px" }}>Name</th>
                   <th style={{ width: "200px", padding: "8px" }}>Deadline</th>
-                  <th style={{ width: "200px", padding: "8px" }}>Mobile revenue (million)</th>
+                  <th style={{ width: "200px", padding: "8px" }}>Monthly mobile revenue</th>
                 </tr>
               </thead>
               <tbody>
