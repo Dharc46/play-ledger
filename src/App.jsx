@@ -274,14 +274,14 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100">
+    <div className="min-h-screen bg-slate-800 text-gray-100">
       {/* Container chính căn giữa */}
       <header className="flex items-center justify-between mb-6 w-full px-4">
         <h1 className="text-2xl font-bold">PlayLedger</h1>
         <div className="flex gap-3">
           <button
             onClick={() => exportData()}
-            className="px-3 py-1 rounded bg-gray-800 hover:bg-gray-700"
+            className="px-3 py-1 rounded bg-slate-600 hover:bg-slate-500"
           >
             Export
           </button>
@@ -302,7 +302,7 @@ export default function App() {
       </nav>
 
       {tab === "list" && (
-        <div className="bg-gray-800 rounded-lg p-4 w-full overflow-x-auto">
+        <div className="bg-slate-700 rounded-lg p-4 w-full overflow-x-auto">
           <table
             className="w-full table-fixed border-collapse"
             style={{ tableLayout: "fixed", minWidth: "2000px" }}
@@ -444,7 +444,7 @@ export default function App() {
       )}
 
       {tab === "deadline" && (
-        <div className="bg-gray-800 rounded-lg p-4 w-full overflow-x-auto">
+        <div className="bg-slate-700 rounded-lg p-4 w-full overflow-x-auto">
           {deadlineListView().length === 0 && (
             <div className="text-gray-400">
               Không có game đang chơi (ticked).
@@ -491,7 +491,7 @@ export default function App() {
                           handleSetDeadline(g.id, e.target.value)
                         }
                         placeholder="dd/mm/yy"
-                        className="w-full rounded px-2 py-1 bg-gray-900 text-gray-100 border border-gray-700"
+                        className="w-full rounded px-2 py-1 bg-slate-600 text-gray-100 border border-slate-500"
                       />
                     </td>
                     <td style={{ padding: "8px", width: "200px" }}>
@@ -504,7 +504,7 @@ export default function App() {
                           handleSetMobileRevenue(g.id, e.target.value)
                         }
                         placeholder="0"
-                        className="w-full rounded px-2 py-1 bg-gray-900 text-gray-100 border border-gray-700"
+                        className="w-full rounded px-2 py-1 bg-slate-600 text-gray-100 border border-slate-500"
                       />
                     </td>
                   </tr>
@@ -541,7 +541,7 @@ function TabButton({ children, active, onClick }) {
     <button
       onClick={onClick}
       className={`px-4 py-2 rounded ${
-        active ? "bg-indigo-600" : "bg-gray-800 hover:bg-gray-700"
+        active ? "bg-indigo-600" : "bg-slate-600 hover:bg-slate-500"
       }`}
     >
       {children}
@@ -600,13 +600,13 @@ function AddGameButton({ onAdd }) {
       </button>
       {open && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
-          <div className="bg-gray-900 p-4 rounded max-w-md w-full">
+          <div className="bg-slate-700 p-4 rounded max-w-md w-full">
             <h3 className="text-lg font-bold mb-2">Thêm game mới</h3>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Tên game"
-              className="w-full mb-2 px-2 py-1 bg-gray-800 rounded"
+              className="w-full mb-2 px-2 py-1 bg-slate-600 rounded"
             />
             <input
               type="file"
@@ -667,7 +667,7 @@ function RatingModal({ game, onClose, onSave }) {
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4">
-      <div className="bg-gray-900 rounded-lg max-w-3xl w-full p-4 overflow-auto max-h-[90vh]">
+      <div className="bg-slate-700 rounded-lg max-w-3xl w-full p-4 overflow-auto max-h-[90vh]">
         <div className="flex items-start justify-between">
           <div>
             <h2 className="text-xl font-bold">Đánh giá: {game.name}</h2>
@@ -684,7 +684,7 @@ function RatingModal({ game, onClose, onSave }) {
           {CRITERIA.map((c, index) => (
             <div 
               key={c.key} 
-              className="bg-gray-800 p-3 rounded"
+              className="bg-slate-600 p-3 rounded"
               style={{ marginBottom: index < CRITERIA.length - 1 ? "24px" : "0" }}
             >
               <div className="flex justify-between items-center">
@@ -697,7 +697,7 @@ function RatingModal({ game, onClose, onSave }) {
                   <select
                     value={scores[c.key]}
                     onChange={(e) => setScore(c.key, e.target.value)}
-                    className="bg-gray-900 px-2 py-1 rounded"
+                    className="bg-slate-600 px-2 py-1 rounded"
                   >
                     {[0, 1, 2, 3, 4, 5].map((n) => (
                       <option key={n} value={n}>
@@ -710,7 +710,7 @@ function RatingModal({ game, onClose, onSave }) {
             </div>
           ))}
 
-          <div className="bg-gray-800 p-3 rounded">
+          <div className="bg-slate-600 p-3 rounded">
             <div className="flex justify-between items-center">
               <div>
                 <div className="font-medium">Tổng</div>
@@ -745,7 +745,7 @@ function RatingModal({ game, onClose, onSave }) {
 function ConfirmModal({ text, onCancel, onConfirm }) {
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
-      <div className="bg-gray-900 p-4 rounded max-w-sm w-full">
+      <div className="bg-slate-700 p-4 rounded max-w-sm w-full">
         <div className="text-lg font-medium mb-3">Xác nhận</div>
         <div className="text-gray-300 mb-4">{text}</div>
         <div className="flex justify-end gap-2">
