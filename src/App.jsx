@@ -16,44 +16,34 @@ const CRITERIA = [
     hint: "Cá tính, diễn xuất của từng nhân vật có khiến bạn gắn bó không?",
   },
   {
-    key: "immersion",
-    title: "3. Hòa nhập & Nhịp độ (Immersion & Pacing)",
-    hint: "Game có chill không?",
-  },
-  {
-    key: "gameplay",
-    title: "4. Gameplay",
-    hint: "Lối chơi có hợp gu, tạo cảm giác vui, thử thách, hoặc đã tay theo kiểu bạn thích không?",
+    key: "experience",
+    title: "3. Trải nghiệm chơi & Nhịp độ",
+    hint: "Lối chơi, cảm giác mượt, mức cuốn, nhịp nhanh chậm… tất cả có hợp gu của bạn không?",
   },
   {
     key: "art",
-    title: "5. Đồ họa & Phong cách nghệ thuật",
+    title: "4. Đồ họa & Phong cách nghệ thuật",
     hint: "Thẩm mỹ, phối màu, thiết kế, tổng thể visual có hợp gu của bạn không?",
   },
   {
     key: "sound",
-    title: "6. Âm thanh & Lồng tiếng",
+    title: "5. Âm thanh & Lồng tiếng",
     hint: "Nhạc nền, hiệu ứng, giọng lồng tiếng có khiến bạn muốn đeo tai nghe để tận hưởng không?",
   },
   {
     key: "resources",
-    title: "7. Tài nguyên cần đầu tư (Time & Money)",
+    title: "6. Tài nguyên cần đầu tư (Time & Money)",
     hint: "Game có đòi hỏi nhiều thời gian hoặc nạp tiền nhiều hơn mức bạn thấy thoải mái không?",
   },
   {
     key: "community",
-    title: "8. Cộng đồng & Môi trường chơi",
-    hint: "Cộng đồng có vui vẻ, thân thiện, ít toxic không?",
+    title: "7. Cộng đồng & Môi trường chơi",
+    hint: "Bạn có thích cộng đồng của game không?",
   },
   {
-    key: "purpose",
-    title: "9. Mục đích cá nhân",
-    hint: "Game này có phù hợp với nhu cầu hiện tại của bạn (thư giãn, giải trí, đắm chìm, thử thách…) không?",
-  },
-  {
-    key: "mood",
-    title: "10. Trạng thái cảm xúc hiện tại",
-    hint: "Ngay lúc này, bạn có thực sự muốn chơi loại game này không?",
+    key: "fit",
+    title: "8. Mức độ phù hợp với nhu cầu & tâm trạng",
+    hint: "Game này có đúng với nhu cầu bạn đang tìm và hợp với cảm xúc hiện tại của bạn không?",
   },
 ];
 
@@ -78,9 +68,9 @@ function parseDateDDMMYY(str) {
 }
 
 function getVerdict(total) {
-  if (total <= 25) return "Có lẽ không nên chơi.";
-  if (total <= 35) return "Có thể thử.";
-  if (total <= 45) return "Rất nên chơi.";
+  if (total <= 20) return "Có lẽ không nên chơi.";
+  if (total <= 28) return "Có thể thử.";
+  if (total <= 36) return "Rất nên chơi.";
   return "Chắc chắn là lựa chọn tốt.";
 }
 
@@ -119,7 +109,7 @@ export default function App() {
       image: imageDataUrl || null,
       playing: false,
       watching: false, // watch list status
-      scoreCached: 0, // latest total out of 50
+      scoreCached: 0, // latest total out of 40
       evaluations: [], // each: {id, dateISO, scores: {key:0..5}, total}
       deadline: null, // dd/mm/yy string
       mobileRevenue: null,
@@ -426,7 +416,7 @@ export default function App() {
                     </span>
                   </td>
                   <td style={{ padding: "8px", fontSize: "0.875rem" }}>
-                    {((g.scoreCached / 50) * 10).toFixed(1)}/10
+                    {((g.scoreCached / 40) * 10).toFixed(1)}/10
                   </td>
                   <td style={{ padding: "8px" }}>
                     <div className="flex gap-2">
@@ -727,9 +717,9 @@ function RatingModal({ game, onClose, onSave }) {
                 <div className="text-gray-400 text-sm">{getVerdict(total)}</div>
               </div>
               <div className="text-right">
-                <div className="text-lg font-bold">{total}/50</div>
+                <div className="text-lg font-bold">{total}/40</div>
                 <div className="text-gray-400 text-sm">
-                  {((total / 50) * 10).toFixed(1)}/10
+                  {((total / 40) * 10).toFixed(1)}/10
                 </div>
               </div>
             </div>
