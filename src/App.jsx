@@ -13,12 +13,12 @@ const CRITERIA = [
   {
     key: "characters",
     title: "2. Nhân vật",
-    hint: "Thiết kế, cá tính, diễn xuất, độ cuốn hút của từng nhân vật có khiến bạn gắn bó không?",
+    hint: "Cá tính, diễn xuất của từng nhân vật có khiến bạn gắn bó không?",
   },
   {
     key: "immersion",
     title: "3. Hòa nhập & Nhịp độ (Immersion & Pacing)",
-    hint: "Game có khiến bạn đắm chìm, cảm thấy cuốn theo dòng chảy không? Nhịp độ có hợp với tâm trạng và gu của bạn không (không quá chậm, không quá mệt)?",
+    hint: "Game có chill không?",
   },
   {
     key: "gameplay",
@@ -690,9 +690,13 @@ function RatingModal({ game, onClose, onSave }) {
           </div>
         </div>
 
-        <div className="mt-4 space-y-3">
-          {CRITERIA.map((c) => (
-            <div key={c.key} className="bg-gray-800 p-3 rounded">
+        <div style={{ marginTop: "16px" }}>
+          {CRITERIA.map((c, index) => (
+            <div 
+              key={c.key} 
+              className="bg-gray-800 p-3 rounded"
+              style={{ marginBottom: index < CRITERIA.length - 1 ? "24px" : "0" }}
+            >
               <div className="flex justify-between items-center">
                 <div>
                   <div className="font-medium">{c.title}</div>
