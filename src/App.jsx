@@ -32,8 +32,8 @@ const CRITERIA = [
   },
   {
     key: "resources",
-    title: "6. Tài nguyên cần đầu tư (Time & Money)",
-    hint: "Game có đòi hỏi nhiều thời gian hoặc nạp tiền nhiều hơn mức bạn thấy thoải mái không?",
+    title: "6. Đầu tư (Money)",
+    hint: "Game có đòi hỏi nạp tiền nhiều không?",
   },
   {
     key: "community",
