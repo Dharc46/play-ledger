@@ -95,7 +95,13 @@ export default function App() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       try {
-        setGames(JSON.parse(raw));
+        const loadedGames = JSON.parse(raw);
+        // Đảm bảo tất cả games có trường watching
+        const gamesWithWatching = loadedGames.map(game => ({
+          ...game,
+          watching: game.watching || false
+        }));
+        setGames(gamesWithWatching);
       } catch (e) {
         console.error("Failed to parse storage", e);
       }
@@ -112,6 +118,7 @@ export default function App() {
       name,
       image: imageDataUrl || null,
       playing: false,
+      watching: false, // watch list status
       scoreCached: 0, // latest total out of 50
       evaluations: [], // each: {id, dateISO, scores: {key:0..5}, total}
       deadline: null, // dd/mm/yy string
@@ -167,7 +174,25 @@ export default function App() {
 
   function handleTogglePlaying(id) {
     setGames((s) =>
-      s.map((g) => (g.id === id ? { ...g, playing: !g.playing } : g))
+      s.map((g) => {
+        if (g.id === id) {
+          // Nếu đang tick thì bỏ tick, nếu không tick thì tick và bỏ watch
+          return { ...g, playing: !g.playing, watching: g.playing ? g.watching : false };
+        }
+        return g;
+      })
+    );
+  }
+
+  function handleToggleWatching(id) {
+    setGames((s) =>
+      s.map((g) => {
+        if (g.id === id) {
+          // Nếu đang watch thì bỏ watch, nếu không watch thì watch và bỏ tick
+          return { ...g, watching: !g.watching, playing: g.watching ? g.playing : false };
+        }
+        return g;
+      })
     );
   }
 
@@ -194,13 +219,22 @@ export default function App() {
   }
 
   function sortedListView() {
-    // When displaying list tab, sort by score descending
+    // When displaying list tab, sort by priority: playing > watching > others
     return [...games].sort((a, b) => {
-      // Tick trước không tick
-      if (a.playing && !b.playing) return -1;
-      if (!a.playing && b.playing) return 1;
+      // Priority: playing (2) > watching (1) > others (0)
+      const getPriority = (game) => {
+        if (game.playing) return 2;
+        if (game.watching) return 1;
+        return 0;
+      };
 
-      // Cùng tick hoặc cùng không tick: so sánh score giảm dần
+      const priorityA = getPriority(a);
+      const priorityB = getPriority(b);
+
+      // Sắp xếp theo priority trước
+      if (priorityA !== priorityB) return priorityB - priorityA;
+
+      // Cùng priority: so sánh score giảm dần
       if (b.scoreCached !== a.scoreCached) return b.scoreCached - a.scoreCached;
 
       // Score bằng nhau: sắp xếp theo tên alphabet
@@ -287,15 +321,24 @@ export default function App() {
               <tr className="text-left text-sm text-gray-400">
                 <th style={{ width: "32px", padding: "8px" }}>#</th>
                 <th style={{ width: "32px", padding: "8px" }}>√</th>
+                <th style={{ width: "32px", padding: "8px" }}>👀</th>
                 <th style={{ width: "64px", padding: "8px" }}>Cover</th>
                 <th style={{ padding: "8px" }}>Name</th>
                 <th style={{ padding: "8px" }}>Score</th>
-                <th style={{ padding: "8px", paddingLeft: "40px" }}>Actions</th>
+                <th style={{ paddingTop: "8px", paddingRight: "8px", paddingBottom: "8px", paddingLeft: "40px" }}>Actions</th>
               </tr>
             </thead>
             <tbody>
               {sortedListView().map((g, i) => (
-                <tr key={g.id} className="border-t border-gray-700">
+                <tr 
+                  key={g.id} 
+                  className="border-t border-gray-700"
+                  style={{
+                    backgroundColor: g.playing ? 'rgba(34, 197, 94, 0.1)' : 
+                                   g.watching ? 'rgba(251, 191, 36, 0.1)' : 'transparent',
+                    borderLeft: g.watching ? '4px solid #fbbf24' : 'none'
+                  }}
+                >
                   <td style={{ padding: "8px" }}>{i + 1}</td>
                   <td style={{ padding: "8px" }}>
                     <input
@@ -303,6 +346,39 @@ export default function App() {
                       checked={!!g.playing}
                       onChange={() => handleTogglePlaying(g.id)}
                     />
+                  </td>
+                  <td style={{ padding: "8px" }}>
+                    <button
+                      onClick={() => {
+                        console.log('Toggling watch for:', g.name, 'Current watching:', g.watching);
+                        handleToggleWatching(g.id);
+                      }}
+                      style={{
+                        fontSize: '18px',
+                        color: g.watching ? '#fbbf24' : '#6b7280',
+                        backgroundColor: g.watching ? 'rgba(251, 191, 36, 0.2)' : 'transparent',
+                        border: 'none',
+                        borderRadius: '4px',
+                        padding: '2px 4px',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s'
+                      }}
+                      title={g.watching ? "Bỏ khỏi watch list" : "Thêm vào watch list"}
+                      onMouseEnter={(e) => {
+                        if (!g.watching) {
+                          e.target.style.color = '#9ca3af';
+                          e.target.style.backgroundColor = 'rgba(55, 65, 81, 0.5)';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!g.watching) {
+                          e.target.style.color = '#6b7280';
+                          e.target.style.backgroundColor = 'transparent';
+                        }
+                      }}
+                    >
+                      👀
+                    </button>
                   </td>
                   <td style={{ padding: "8px" }}>
                     <div
@@ -341,7 +417,14 @@ export default function App() {
                       )}
                     </div>
                   </td>
-                  <td style={{ padding: "8px" }}>{g.name}</td>
+                  <td style={{ padding: "8px" }}>
+                    <span style={{
+                      color: g.watching ? '#fef3c7' : 'inherit',
+                      fontWeight: g.watching ? '500' : 'normal'
+                    }}>
+                      {g.name}
+                    </span>
+                  </td>
                   <td style={{ padding: "8px", fontSize: "0.875rem" }}>
                     {((g.scoreCached / 50) * 10).toFixed(1)}/10
                   </td>
