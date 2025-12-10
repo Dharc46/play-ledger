@@ -32,8 +32,8 @@ const CRITERIA = [
   },
   {
     key: "resources",
-    title: "6. Đầu tư (Money)",
-    hint: "Game có đòi hỏi nạp tiền nhiều không?",
+    title: "6. Đầu tư",
+    hint: "Skin mặc định có đủ đẹp để không cần nạp tiền mua skin trả phí không?",
   },
   {
     key: "community",
