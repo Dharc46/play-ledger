@@ -75,7 +75,7 @@ function getVerdict(total) {
 }
 
 export default function App() {
-  const [tab, setTab] = useState("list");
+  const [tab, setTab] = useState("deadline");
   const [games, setGames] = useState([]);
   const [editingGame, setEditingGame] = useState(null); // for rating modal
   const [showConfirm, setShowConfirm] = useState(false);
@@ -87,9 +87,9 @@ export default function App() {
       try {
         const loadedGames = JSON.parse(raw);
         // Đảm bảo tất cả games có trường watching
-        const gamesWithWatching = loadedGames.map(game => ({
+        const gamesWithWatching = loadedGames.map((game) => ({
           ...game,
-          watching: game.watching || false
+          watching: game.watching || false,
         }));
         setGames(gamesWithWatching);
       } catch (e) {
@@ -167,7 +167,11 @@ export default function App() {
       s.map((g) => {
         if (g.id === id) {
           // Nếu đang tick thì bỏ tick, nếu không tick thì tick và bỏ watch
-          return { ...g, playing: !g.playing, watching: g.playing ? g.watching : false };
+          return {
+            ...g,
+            playing: !g.playing,
+            watching: g.playing ? g.watching : false,
+          };
         }
         return g;
       })
@@ -179,7 +183,11 @@ export default function App() {
       s.map((g) => {
         if (g.id === id) {
           // Nếu đang watch thì bỏ watch, nếu không watch thì watch và bỏ tick
-          return { ...g, watching: !g.watching, playing: g.watching ? g.playing : false };
+          return {
+            ...g,
+            watching: !g.watching,
+            playing: g.watching ? g.playing : false,
+          };
         }
         return g;
       })
@@ -315,18 +323,30 @@ export default function App() {
                 <th style={{ width: "64px", padding: "8px" }}>Cover</th>
                 <th style={{ padding: "8px" }}>Name</th>
                 <th style={{ padding: "8px" }}>Score</th>
-                <th style={{ paddingTop: "8px", paddingRight: "8px", paddingBottom: "8px", paddingLeft: "40px" }}>Actions</th>
+                <th
+                  style={{
+                    paddingTop: "8px",
+                    paddingRight: "8px",
+                    paddingBottom: "8px",
+                    paddingLeft: "40px",
+                  }}
+                >
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
               {sortedListView().map((g, i) => (
-                <tr 
-                  key={g.id} 
+                <tr
+                  key={g.id}
                   className="border-t border-gray-700"
                   style={{
-                    backgroundColor: g.playing ? 'rgba(34, 197, 94, 0.1)' : 
-                                   g.watching ? 'rgba(251, 191, 36, 0.1)' : 'transparent',
-                    borderLeft: g.watching ? '4px solid #fbbf24' : 'none'
+                    backgroundColor: g.playing
+                      ? "rgba(34, 197, 94, 0.1)"
+                      : g.watching
+                      ? "rgba(251, 191, 36, 0.1)"
+                      : "transparent",
+                    borderLeft: g.watching ? "4px solid #fbbf24" : "none",
                   }}
                 >
                   <td style={{ padding: "8px" }}>{i + 1}</td>
@@ -340,30 +360,42 @@ export default function App() {
                   <td style={{ padding: "8px" }}>
                     <button
                       onClick={() => {
-                        console.log('Toggling watch for:', g.name, 'Current watching:', g.watching);
+                        console.log(
+                          "Toggling watch for:",
+                          g.name,
+                          "Current watching:",
+                          g.watching
+                        );
                         handleToggleWatching(g.id);
                       }}
                       style={{
-                        fontSize: '18px',
-                        color: g.watching ? '#fbbf24' : '#6b7280',
-                        backgroundColor: g.watching ? 'rgba(251, 191, 36, 0.2)' : 'transparent',
-                        border: 'none',
-                        borderRadius: '4px',
-                        padding: '2px 4px',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s'
+                        fontSize: "18px",
+                        color: g.watching ? "#fbbf24" : "#6b7280",
+                        backgroundColor: g.watching
+                          ? "rgba(251, 191, 36, 0.2)"
+                          : "transparent",
+                        border: "none",
+                        borderRadius: "4px",
+                        padding: "2px 4px",
+                        cursor: "pointer",
+                        transition: "all 0.2s",
                       }}
-                      title={g.watching ? "Bỏ khỏi watch list" : "Thêm vào watch list"}
+                      title={
+                        g.watching
+                          ? "Bỏ khỏi watch list"
+                          : "Thêm vào watch list"
+                      }
                       onMouseEnter={(e) => {
                         if (!g.watching) {
-                          e.target.style.color = '#9ca3af';
-                          e.target.style.backgroundColor = 'rgba(55, 65, 81, 0.5)';
+                          e.target.style.color = "#9ca3af";
+                          e.target.style.backgroundColor =
+                            "rgba(55, 65, 81, 0.5)";
                         }
                       }}
                       onMouseLeave={(e) => {
                         if (!g.watching) {
-                          e.target.style.color = '#6b7280';
-                          e.target.style.backgroundColor = 'transparent';
+                          e.target.style.color = "#6b7280";
+                          e.target.style.backgroundColor = "transparent";
                         }
                       }}
                     >
@@ -408,10 +440,12 @@ export default function App() {
                     </div>
                   </td>
                   <td style={{ padding: "8px" }}>
-                    <span style={{
-                      color: g.watching ? '#fef3c7' : 'inherit',
-                      fontWeight: g.watching ? '500' : 'normal'
-                    }}>
+                    <span
+                      style={{
+                        color: g.watching ? "#fef3c7" : "inherit",
+                        fontWeight: g.watching ? "500" : "normal",
+                      }}
+                    >
                       {g.name}
                     </span>
                   </td>
@@ -460,7 +494,9 @@ export default function App() {
                   <th style={{ width: "64px", padding: "8px" }}>Cover</th>
                   <th style={{ padding: "8px" }}>Name</th>
                   <th style={{ width: "200px", padding: "8px" }}>Deadline</th>
-                  <th style={{ width: "200px", padding: "8px" }}>Monthly mobile revenue</th>
+                  <th style={{ width: "200px", padding: "8px" }}>
+                    Monthly mobile revenue
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -671,7 +707,6 @@ function RatingModal({ game, onClose, onSave }) {
         <div className="flex items-start justify-between">
           <div>
             <h2 className="text-xl font-bold">Đánh giá: {game.name}</h2>
-
           </div>
           <div className="flex gap-2">
             <button onClick={onClose} className="px-2 py-1 bg-gray-700 rounded">
@@ -682,10 +717,12 @@ function RatingModal({ game, onClose, onSave }) {
 
         <div style={{ marginTop: "16px" }}>
           {CRITERIA.map((c, index) => (
-            <div 
-              key={c.key} 
+            <div
+              key={c.key}
               className="bg-slate-600 p-3 rounded"
-              style={{ marginBottom: index < CRITERIA.length - 1 ? "24px" : "0" }}
+              style={{
+                marginBottom: index < CRITERIA.length - 1 ? "24px" : "0",
+              }}
             >
               <div className="flex justify-between items-center">
                 <div>
